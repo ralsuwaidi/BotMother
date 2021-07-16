@@ -16,19 +16,12 @@ bot.
 import logging
 import os
 
-from dotenv import load_dotenv
 from telegram import ForceReply, Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
 
-
-# Get parent path
-PARENT_DIR = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), os.pardir))
-
-# Connect the path with your '.env' file name
-load_dotenv(os.path.join(PARENT_DIR, '.env'))
-
+import config
+from recurring import greet
 
 # Enable logging
 logging.basicConfig(
@@ -54,15 +47,16 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
+def morning_command(update: Update, context: CallbackContext) -> None:
+    """Send a morning dua to mom"""
+    context.bot.send_message(text=greet.good_morning(),
+                             chat_id=config.MY_ID)
 
 
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater(os.getenv("BOT_TOKEN"))
+    updater = Updater(config.BOT_TOKEN)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -70,10 +64,7 @@ def main() -> None:
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
-
-    # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(
-        Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(CommandHandler("morning", morning_command))
 
     # Start the Bot
     updater.start_polling()
