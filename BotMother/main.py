@@ -70,6 +70,16 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 
+def send_command(update: Update, context: CallbackContext):
+    """sends direct command to mom"""
+
+    if len(context.args) > 0:
+        context.bot.send_message(text=' '.join(context.args),
+                                    chat_id=config.MOM_ID)
+    else:
+        context.bot.send_message(text="add sommething after the `/send` command",
+                        chat_id=config.MY_ID)
+
 # TODO: add an inline keyboard command to confirm
 def morning_command(update: Update, context: CallbackContext) -> None:
     """Send a morning dua to mom"""
@@ -100,6 +110,7 @@ def main() -> None:
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("morning", morning_command))
+    dispatcher.add_handler(CommandHandler("send", send_command))
 
     # Start the Bot
     updater.start_polling()
