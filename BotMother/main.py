@@ -55,7 +55,7 @@ def button(update: Update, context: CallbackContext) -> None:
         query.edit_message_text(
             text=f"Sending morning message")
         context.bot.send_message(text=greet.good_morning(),
-                                 chat_id=config.MY_ID)
+                                 chat_id=config.MOM_ID)
     else:
         query.edit_message_text(text="Did not send message")
 
