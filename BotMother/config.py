@@ -17,3 +17,17 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # ID of group/mom chat
 MOM_ID = os.getenv("MOM_ID")
+
+
+#
+# set the morning events
+#
+
+MON, TUE, WED, THU, FRI, SAT, SUN = range(7)
+
+
+# morning days
+MORNING_DAYS = [MON, TUE, WED, THU, SUN]
+
+# morning times
+MORNING_TIMES = [8, 9, 10]

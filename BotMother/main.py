@@ -16,12 +16,15 @@ bot.
 import logging
 import os
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
-from telegram.ext import (CallbackContext, CommandHandler,
-                          CallbackQueryHandler, Updater)
+from telegram import (ForceReply, InlineKeyboardButton, InlineKeyboardMarkup,
+                      Update)
+from telegram.ext import (CallbackContext, CallbackQueryHandler,
+                          CommandHandler, Updater)
 
 import config
 from recurring import greet
+
+from utils import time
 
 # Enable logging
 logging.basicConfig(
@@ -106,4 +109,5 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    print(time.random_morning())
     main()
