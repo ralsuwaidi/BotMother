@@ -16,7 +16,7 @@ bot.
 import logging
 import os
 
-from telegram import (ForceReply, InlineKeyboardButton, InlineKeyboardMarkup,
+from telegram import (Bot, InlineKeyboardButton, InlineKeyboardMarkup,
                       Update)
 from telegram.ext import (CallbackContext, CallbackQueryHandler,
                           CommandHandler, Updater)
@@ -24,7 +24,7 @@ from telegram.ext import (CallbackContext, CallbackQueryHandler,
 import config
 from recurring import greet
 
-from utils import time
+from utils import time_control
 
 # Enable logging
 logging.basicConfig(
@@ -38,12 +38,13 @@ logger = logging.getLogger(__name__)
 # context.
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
-    user = update.effective_user
-    update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
-        reply_markup=ForceReply(selective=True),
-    )
+    context.bot.send_message(text=greet.good_morning(),
+                                 chat_id=config.MY_ID)
 
+def morning_message(arg=None):
+    bot = Bot(token=config.BOT_TOKEN)
+    bot.send_message(text=greet.good_morning(),
+                                 chat_id=config.MOM_ID)
 
 # TODO: pass function that initiated this call
 def button(update: Update, context: CallbackContext) -> None:
@@ -85,6 +86,7 @@ def morning_command(update: Update, context: CallbackContext) -> None:
         'Do you want to send morning dua?', reply_markup=reply_markup)
 
 
+
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
@@ -102,6 +104,9 @@ def main() -> None:
     # Start the Bot
     updater.start_polling()
 
+    # starts threaded scheduled morning messages
+    time_control.start_scheduler(time="08:00", job=morning_message,args=[], time_interval=10800)
+
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
@@ -109,5 +114,4 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    print(time.random_morning())
     main()
