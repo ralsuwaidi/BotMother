@@ -16,9 +16,9 @@ bot.
 import logging
 import os
 
-from telegram import ForceReply, Update
-from telegram.ext import (CallbackContext, CommandHandler, Filters,
-                          MessageHandler, Updater)
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
+from telegram.ext import (CallbackContext, CommandHandler,
+                          CallbackQueryHandler, Updater)
 
 import config
 from recurring import greet
@@ -42,15 +42,44 @@ def start(update: Update, context: CallbackContext) -> None:
     )
 
 
+# TODO: pass function that initiated this call
+def button(update: Update, context: CallbackContext) -> None:
+    """Parses the CallbackQuery and updates the message text."""
+    query = update.callback_query
+
+    # CallbackQueries need to be answered, even if no notification to the user is needed
+    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+    query.answer()
+
+    if query.data == 'confirm':
+        query.edit_message_text(
+            text=f"Sending morning message")
+        context.bot.send_message(text=greet.good_morning(),
+                                 chat_id=config.MY_ID)
+    else:
+        query.edit_message_text(text="Did not send message")
+
+
+# TODO: show list of commands
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Help!')
 
 
+# TODO: add an inline keyboard command to confirm
 def morning_command(update: Update, context: CallbackContext) -> None:
     """Send a morning dua to mom"""
-    context.bot.send_message(text=greet.good_morning(),
-                             chat_id=config.MY_ID)
+    keyboard = [
+        [
+            InlineKeyboardButton("Yes", callback_data='confirm'),
+            InlineKeyboardButton("No", callback_data='cancel'),
+        ]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text(
+        'Do you want to send morning dua?', reply_markup=reply_markup)
 
 
 def main() -> None:
@@ -63,6 +92,7 @@ def main() -> None:
 
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
+    updater.dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("morning", morning_command))
 
