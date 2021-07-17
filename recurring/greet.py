@@ -1,6 +1,6 @@
 import os
-import sys
 import random
+import sys
 
 
 def good_morning(file=os.path.join(os.path.dirname(__file__), 'resources/morning.txt')) -> str:

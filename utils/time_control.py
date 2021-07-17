@@ -2,9 +2,13 @@ import datetime
 import random
 import threading
 import time
+import logging
 
 import config
 import schedule
+
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.DEBUG)
 
 
 def start_scheduler(time: str, job, args, time_interval: int = 2):
@@ -18,6 +22,11 @@ def start_scheduler(time: str, job, args, time_interval: int = 2):
 
     schedule.every().day.at(time).do(_schedule_next_run, job=job,
                                      time_interval=time_interval, args=args)
+
+    # log schedule
+    logger.log(logging.INFO, schedule.get_jobs())
+
+    # start schedule thread
     x = threading.Thread(target=_run_scheduler_thread)
     x.start()
 
@@ -69,6 +78,8 @@ def _schedule_next_run(job, time_interval, args):
     time_span = random.randint(1, time_interval)
     # run job after time_pan once
     schedule.every(time_span).seconds.do(_work, job=job, args=args)
+    # log it
+    logger.log(logging.INFO, schedule.get_jobs())
 
 
 if __name__ == '__main__':
