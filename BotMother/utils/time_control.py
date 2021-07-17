@@ -7,18 +7,17 @@ import config
 import schedule
 
 
-
-
-def start_scheduler(time: str, job,args, time_interval: int=2):
+def start_scheduler(time: str, job, args, time_interval: int = 2):
     """starts threaded scheduler which runs the function `job`
     everyday at time=`time` + `time_interval` in seconds
-    
+
     Usage: 
     start_scheduler(time="19:44",job=print_this, args=['foo','bar'], time_interval=5)
-    
+
     where `print_this` is a function that takes args as argument"""
 
-    schedule.every().day.at(time).do(_schedule_next_run, job=job, time_interval=time_interval, args=args)
+    schedule.every().day.at(time).do(_schedule_next_run, job=job,
+                                     time_interval=time_interval, args=args)
     x = threading.Thread(target=_run_scheduler_thread)
     x.start()
 
@@ -54,14 +53,16 @@ def _next_weekday(day: datetime.datetime, weekday: int) -> datetime.datetime:
 
 
 def _work(job, args):
-   func = job
-   func(*args)
-   return schedule.CancelJob
+    func = job
+    func(*args)
+    return schedule.CancelJob
+
 
 def _run_scheduler_thread():
     while True:
         schedule.run_pending()
         time.sleep(1)
+
 
 def _schedule_next_run(job, time_interval, args):
     # get random sends within 3 hours

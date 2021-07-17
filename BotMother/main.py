@@ -39,14 +39,17 @@ logger = logging.getLogger(__name__)
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     context.bot.send_message(text=greet.good_morning(),
-                                 chat_id=config.MY_ID)
+                             chat_id=config.MY_ID)
+
 
 def morning_message(arg=None):
     bot = Bot(token=config.BOT_TOKEN)
     bot.send_message(text=greet.good_morning(),
-                                 chat_id=config.MOM_ID)
+                     chat_id=config.MOM_ID)
 
 # TODO: pass function that initiated this call
+
+
 def button(update: Update, context: CallbackContext) -> None:
     """Parses the CallbackQuery and updates the message text."""
     query = update.callback_query
@@ -75,12 +78,14 @@ def send_command(update: Update, context: CallbackContext):
 
     if len(context.args) > 0:
         context.bot.send_message(text=' '.join(context.args),
-                                    chat_id=config.MOM_ID)
+                                 chat_id=config.MOM_ID)
     else:
         context.bot.send_message(text="add sommething after the `/send` command",
-                        chat_id=config.MY_ID)
+                                 chat_id=config.MY_ID)
 
 # TODO: add an inline keyboard command to confirm
+
+
 def morning_command(update: Update, context: CallbackContext) -> None:
     """Send a morning dua to mom"""
     keyboard = [
@@ -94,7 +99,6 @@ def morning_command(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text(
         'Do you want to send morning dua?', reply_markup=reply_markup)
-
 
 
 def main() -> None:
@@ -116,7 +120,8 @@ def main() -> None:
     updater.start_polling()
 
     # starts threaded scheduled morning messages
-    time_control.start_scheduler(time="08:00", job=morning_message,args=[], time_interval=10800)
+    time_control.start_scheduler(
+        time="08:00", job=morning_message, args=[], time_interval=10800)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
