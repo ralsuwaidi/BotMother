@@ -7,8 +7,8 @@ import logging
 import config
 import schedule
 
+# give logger name of the module
 logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.DEBUG)
 
 
 def start_scheduler(time: str, job, args, time_interval: int = 2):
@@ -20,8 +20,10 @@ def start_scheduler(time: str, job, args, time_interval: int = 2):
 
     where `print_this` is a function that takes args as argument"""
 
-    schedule.every().day.at(time).do(_schedule_next_run, job=job,
-                                     time_interval=time_interval, args=args)
+    schedule.every().day.at(time).do(_schedule_next_run,
+                                     job=job,
+                                     time_interval=time_interval,
+                                     args=args)
 
     # log schedule
     logger.log(logging.INFO, schedule.get_jobs())

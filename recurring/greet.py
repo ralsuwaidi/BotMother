@@ -1,14 +1,14 @@
 import os
-import random
 import sys
 
+from utils.common import random_line
 
-def good_morning(file=os.path.join(os.path.dirname(__file__), 'resources/morning.txt')) -> str:
-    lines = []
-    with open(file) as f:
-        lines = f.read().splitlines()
 
-    return lines[random.randint(0, len(lines))]
+def good_morning() -> str:
+    """gets random line from morning.txt file."""
+
+    file = os.path.join(os.path.dirname(__file__), 'resources/morning.txt')
+    return random_line(file)
 
 
 if __name__ == '__main__':

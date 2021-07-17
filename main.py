@@ -62,7 +62,7 @@ def main() -> None:
 
     # starts threaded scheduled morning messages
     time_control.start_scheduler(
-        time="08:00", job=morning_message, args=[BOT_TOKEN, config.MY_ID], time_interval=10800)
+        time="08:00", job=morning_message, args=[BOT_TOKEN, 75], time_interval=10800)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
