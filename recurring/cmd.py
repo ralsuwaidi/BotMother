@@ -4,6 +4,7 @@ import config
 from telegram import Bot
 
 from recurring import greet
+import time
 
 
 def morning_message(bot_token, percentage_chance=75):
@@ -14,6 +15,8 @@ def morning_message(bot_token, percentage_chance=75):
         percentage_chance: Chance that the msg occurs as a percentage.
 
     """
+
+    # create new bot instance to send the msgs
     bot = Bot(token=bot_token)
 
     # chance that the bot sends morning message
@@ -23,6 +26,8 @@ def morning_message(bot_token, percentage_chance=75):
 
         # after sending morning message
         # 50% chance bot will follow up with good morning
+        # 'act' like you are typing
+        time.sleep(5)
         if random.randint(0, 100) < 50:
             bot.send_message(text='صباح الخير',
                              chat_id=config.MOM_ID)
